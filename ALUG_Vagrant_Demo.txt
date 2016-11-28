@@ -1,0 +1,9 @@
+Go to https://www.virtualbox.org/wiki/Downloads and download 
+ - the latest VirtualBox release for your workstation operating system (called the "host") 
+ - the coresponding version of the VirtualBox Extensions Pack 
+
+Go to http://www.vagrantup.com/downloads.html and download the latest release for your host.
+
+install VirtualBox
+install the Extensions Pack
+install Vagrant

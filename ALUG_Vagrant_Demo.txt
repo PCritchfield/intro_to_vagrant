@@ -29,4 +29,10 @@ vagrant destroy
 vagrant halt
 # will pass the shutdown command
 vagrant suspend
-# will stop th eserver in a saved state
+# will stop the server in a saved state
+
+# slackware VM
+vagrant init ratfactor/slackware
+
+# xenial vm
+cd sample && vagrant up

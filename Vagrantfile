@@ -21,9 +21,9 @@ def windows_host?
   host_os =~ /mswin32/i || host_os =~ /mingw32/i
 end
 
-def forward_rabbit_ports(config)
-  config.vm.network :forwarded_port, guest:  5672, host:  5672, id: 'rabbitmq'
-  config.vm.network :forwarded_port, guest: 15672, host: 15672, id: 'rabbitmq_management'
+def forward_elasticsearch_ports(config)
+  config.vm.network :forwarded_port, guest: 9200, host: 9200, id: 'elasticsearch'
+  config.vm.network :forwarded_port, guest: 9250, host: 9250, id: 'elasticsearch_tests'
 end
 
 def sync_projects_directory(cfg)
@@ -108,13 +108,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     cfg.vm.provider 'virtualbox' do |v|
       v.name = 'Base Ubuntu 12.04'
-      v.memory = 4096
-      v.cpus = 4
+      v.memory = 2048
+      v.cpus = 2
     end
 
+    forward_elasticsearch_ports(cfg)
+    
     sync_projects_directory cfg
 
-    config.vm.provision :shell, path: "scripts/install_vagrant.sh"
+    cfg.vm.provision :shell, :path => "scripts/install_vagrant.sh"
+    cfg.vm.provision :shell, :path => 'scripts/elasticsearch.sh', :args => ['2.3.1']
 
     copy_dotfiles(cfg)
     copy_ssh_keys(cfg)
@@ -132,14 +135,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     cfg.vm.provider 'virtualbox' do |v|
       v.name = 'trusty'
-      v.memory = 2048
-      v.cpus = 2
+      v.memory = 4096
+      v.cpus = 4
       end
+
+    forward_elasticsearch_ports(cfg)
 
     sync_projects_directory cfg
     
-    config.vm.provision :shell, path: "scripts/install_vagrant.sh"
-
+    cfg.vm.provision :shell, :path => "scripts/install_vagrant.sh"
+    cfg.vm.provision :shell, :path => 'scripts/elasticsearch.sh', :args => ['2.3.1']
+    
     copy_dotfiles(cfg)
     copy_ssh_keys(cfg)
   end

@@ -7,3 +7,26 @@ Go to http://www.vagrantup.com/downloads.html and download the latest release fo
 install VirtualBox
 install the Extensions Pack
 install Vagrant
+
+
+# Create a generic Vagrantfile to provision an Ubuntu 16.04 VM
+# by default vagrnat will look to https://atlas.hashicorp.com/boxes/search for the vm image
+vagrant init ubuntu/xenial64
+
+#A location can be provided after the box name if there is an .iso or .ovf that you are looking to use
+vagrant init precise32 http://files.vagrantup.com/precise32.box
+
+# Once the vagrnat file is provisioned you can start it
+vagrant up
+
+# and connect 
+vagrant ssh
+# if using a windows host you will need to install either gitbash or putty to connect with ssh
+
+# when done with the server
+vagrant destroy
+# will delete the guest
+vagrant halt
+# will pass the shutdown command
+vagrant suspend
+# will stop th eserver in a saved state

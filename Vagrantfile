@@ -100,7 +100,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   ####################################################################
 
-  config.vm.define 'ubuntu_12.04', autostart: false do |cfg|
+  config.vm.define 'precise', autostart: false do |cfg|
 
     cfg.vm.box = 'ubuntu/precise64'
 
@@ -112,8 +112,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.cpus = 4
     end
 
-    cfg.vm.synced_folder './shared/vim', "#{UNIX_HOME}/.vim"
     sync_projects_directory cfg
+
+    config.vm.provision :shell, path: "scripts/install_vagrant.sh"
 
     copy_dotfiles(cfg)
     copy_ssh_keys(cfg)
@@ -125,32 +126,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   ####################################################################
 
-  config.vm.define 'linux-base', autostart: false do |cfg|
+  config.vm.define 'trusty', autostart: false do |cfg|
 
     cfg.vm.box = 'ubuntu/trusty64'
 
     cfg.vm.provider 'virtualbox' do |v|
-      v.name = 'Base Ubuntu 14.04'
+      v.name = 'trusty'
       v.memory = 2048
       v.cpus = 2
-    end
+      end
+
+    sync_projects_directory cfg
+    
+    config.vm.provision :shell, path: "scripts/install_vagrant.sh"
 
     copy_dotfiles(cfg)
     copy_ssh_keys(cfg)
   end
 
-  ####################################################################
-  #  CentOS base image
-
-  config.vm.define 'centos', autostart: false do |cfg|
-
-    cfg.vm.box = 'centos-6_5-x86_64'
-    cfg.vm.box_url = 'https://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.5-x86_64-v20140504.box'
-
-    cfg.vm.provider 'virtualbox' do |v|
-      v.name = 'CentOS 6.5'
-      v.memory = 2048
-      v.cpus = 1
-    end
-  end
 end

@@ -21,11 +21,6 @@ def windows_host?
   host_os =~ /mswin32/i || host_os =~ /mingw32/i
 end
 
-def forward_elasticsearch_ports(config)
-  config.vm.network :forwarded_port, guest: 9200, host: 9200, id: 'elasticsearch'
-  config.vm.network :forwarded_port, guest: 9250, host: 9250, id: 'elasticsearch_tests'
-end
-
 def sync_projects_directory(cfg)
   uppercase_p_projects = File.join(Dir.home, 'Projects')
   lowercase_p_projects = File.join(Dir.home, 'projects')
@@ -104,20 +99,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     cfg.vm.box = 'ubuntu/precise64'
 
-    forward_rabbit_ports(cfg)
-
     cfg.vm.provider 'virtualbox' do |v|
       v.name = 'Base Ubuntu 12.04'
       v.memory = 2048
       v.cpus = 2
     end
 
-    forward_elasticsearch_ports(cfg)
-    
     sync_projects_directory cfg
 
     cfg.vm.provision :shell, :path => "scripts/install_vagrant.sh"
-    cfg.vm.provision :shell, :path => 'scripts/elasticsearch.sh', :args => ['2.3.1']
 
     copy_dotfiles(cfg)
     copy_ssh_keys(cfg)
@@ -139,12 +129,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.cpus = 4
       end
 
-    forward_elasticsearch_ports(cfg)
-
     sync_projects_directory cfg
     
     cfg.vm.provision :shell, :path => "scripts/install_vagrant.sh"
-    cfg.vm.provision :shell, :path => 'scripts/elasticsearch.sh', :args => ['2.3.1']
     
     copy_dotfiles(cfg)
     copy_ssh_keys(cfg)
